@@ -5,12 +5,20 @@ application:
       backend: file:///lzcapp/pkg/content/web/index.html
     - location: /
       backend: http://ask4me:8080/
+  injects:
+    - id: redirect-404-to-help
+      on: response
+      auth_required: false
+      when:
+        - "/*"
+      do: |
+        if (ctx.status === 404) {
+          ctx.response.send(302, "", { location: "/help" });
+          return;
+        }
   public_path:
     - /
     - /help
-  handlers:
-    error_page_templates:
-      "404": /lzcapp/pkg/content/errors/404.html.tpl
 
 services:
   ask4me:
