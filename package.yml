@@ -1,0 +1,20 @@
+package: cloud.lazycat.app.ask4me
+version: 0.2.4
+name: Ask4Me
+description: "Single request, complete the human-in-the-loop"
+min_os_version: 1.5.0
+author: easychen
+license: MIT
+homepage: https://github.com/easychen/ask4me
+
+permissions:
+  required:
+    - net.internet
+
+locales:
+  zh:
+    name: "Ask4Me"
+    description: "极简 Human-in-the-Loop 方案：一个同步请求搞定一切"
+  en:
+    name: "Ask4Me"
+    description: "Single request, complete the human-in-the-loop"

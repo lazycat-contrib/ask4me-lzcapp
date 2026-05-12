@@ -1,0 +1,53 @@
+params:
+  - id: base_url
+    type: string
+    name: "Base URL"
+    description: "Publicly accessible base URL for generating links in notifications. Leave empty to auto-use the LazyCat app domain."
+    optional: true
+    default_value: ""
+
+  - id: api_key
+    type: secret
+    name: "API Key"
+    description: "API authentication key. All API requests must include this key."
+    optional: false
+    default_value: "$random(len=32)"
+
+  - id: serverchan_sendkey
+    type: secret
+    name: "ServerChan SendKey"
+    description: "ServerChan notification send key. Leave empty if using Apprise instead."
+    optional: true
+    default_value: ""
+
+  - id: apprise_urls
+    type: secret
+    name: "Apprise URLs"
+    description: "Apprise notification URLs (e.g. schan://SCT...). At least one notification channel (ServerChan or Apprise) is required, otherwise requests will fail with notify.failed."
+    optional: true
+    default_value: ""
+
+  - id: apprise_bin
+    type: string
+    name: "Apprise Binary"
+    description: "Path to the Apprise binary. Default: apprise"
+    optional: true
+    default_value: "apprise"
+
+locales:
+  zh:
+    base_url:
+      name: "基础 URL"
+      description: "用于在通知中生成交互链接的外部可访问地址。留空则自动使用 LazyCat 应用域名。"
+    api_key:
+      name: "API 密钥"
+      description: "API 鉴权密钥，所有 API 请求都需要携带此密钥。"
+    serverchan_sendkey:
+      name: "ServerChan 发送密钥"
+      description: "ServerChan 通知推送密钥。如使用 Apprise 则留空。"
+    apprise_urls:
+      name: "Apprise 通知地址"
+      description: "Apprise 通知推送地址（如 schan://SCT...）。至少需要配置一个通知渠道（ServerChan 或 Apprise），否则请求会以 notify.failed 快速结束。"
+    apprise_bin:
+      name: "Apprise 二进制路径"
+      description: "Apprise 可执行文件路径，默认: apprise"

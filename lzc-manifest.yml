@@ -1,0 +1,28 @@
+application:
+  subdomain: ask4me
+  upstreams:
+    - location: /
+      backend: http://app-proxy:80/
+  public_path:
+    - /
+
+services:
+  ask4me:
+    image: docker.1ms.run/easychen/ask4me:0.2.4
+    environment:
+      - ASK4ME_BASE_URL={{if .U.base_url}}{{.U.base_url}}{{else}}https://{{.S.AppDomain}}{{end}}
+      - ASK4ME_API_KEY={{.U.api_key}}
+      - ASK4ME_SERVERCHAN_SENDKEY={{.U.serverchan_sendkey}}
+      - ASK4ME_APPRISE_URLS={{.U.apprise_urls}}
+      - ASK4ME_APPRISE_BIN={{.U.apprise_bin}}
+      - ASK4ME_SQLITE_PATH=/data/ask4me.db
+      - ASK4ME_LISTEN_ADDR=:8080
+    binds:
+      - /lzcapp/var/data:/data
+
+usage: |
+  Ask4Me forwards your questions to an AI backend and delivers answers via notification channels (ServerChan or Apprise).
+
+  1. Set your API key and at least one notification channel (ServerChan or Apprise) during deployment.
+  2. Submit questions via the API.
+  3. Receive answers through your configured notification channel.
