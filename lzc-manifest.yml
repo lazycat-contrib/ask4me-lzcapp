@@ -2,7 +2,7 @@ application:
   subdomain: ask4me
   upstreams:
     - location: /
-      backend: http://app-proxy:80/
+      backend: http://ask4me:8080/
   public_path:
     - /
 

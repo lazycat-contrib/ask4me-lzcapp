@@ -1,4 +1,4 @@
-package: cloud.lazycat.app.ask4me
+package: community.lazycat.app.ask4me
 version: 0.2.4
 name: Ask4Me
 description: "Single request, complete the human-in-the-loop"
