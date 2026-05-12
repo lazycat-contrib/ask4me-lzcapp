@@ -10,7 +10,7 @@ application:
     - /help
   handlers:
     error_page_templates:
-      404: /lzcapp/pkg/content/errors/404.html.tpl
+      "404": /lzcapp/pkg/content/errors/404.html.tpl
 
 services:
   ask4me:
