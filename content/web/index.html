@@ -1,26 +1,26 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="zh-CN" class="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ask4Me — Single request, complete the Human-in-the-Loop</title>
+<title>Ask4Me - Human-in-the-Loop Usage Guide</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0F172A;
-  --bg-elevated: #1E293B;
-  --bg-muted: #272F42;
-  --fg: #F8FAFC;
-  --fg-muted: #94A3B8;
+  --bg: #0f172a;
+  --bg-elevated: #1e293b;
+  --bg-muted: #273449;
+  --fg: #f8fafc;
+  --fg-muted: #94a3b8;
   --border: #334155;
-  --accent: #22C55E;
-  --accent-dim: #16A34A;
-  --red: #EF4444;
-  --yellow: #EAB308;
-  --blue: #38BDF8;
-  --purple: #A78BFA;
+  --accent: #22c55e;
+  --accent-dim: #16a34a;
+  --red: #ef4444;
+  --yellow: #eab308;
+  --blue: #38bdf8;
+  --purple: #a78bfa;
   --radius: 8px;
   --radius-lg: 12px;
 }
@@ -30,422 +30,448 @@
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  font-family: 'IBM Plex Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background: var(--bg);
   color: var(--fg);
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-/* Nav */
+.skip-link {
+  position: fixed;
+  left: 16px;
+  top: -48px;
+  z-index: 200;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: #020617;
+  font-weight: 700;
+  transition: top 150ms ease-out;
+}
+.skip-link:focus { top: 8px; }
+
 nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 56px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
   background: color-mix(in srgb, var(--bg) 92%, transparent);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
-  padding: 0 24px; height: 56px;
-  display: flex; align-items: center; justify-content: space-between;
 }
-nav .logo { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 18px; color: var(--fg); letter-spacing: -0.5px; }
+
+nav .logo {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--fg);
+  text-decoration: none;
+  white-space: nowrap;
+}
 nav .logo span { color: var(--accent); }
-nav .links { display: flex; gap: 24px; list-style: none; }
-nav .links a { color: var(--fg-muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 150ms; }
-nav .links a:hover { color: var(--fg); }
+nav .right { display: flex; align-items: center; gap: 18px; min-width: 0; }
+nav .links { display: flex; gap: 20px; list-style: none; }
+nav .links a {
+  color: var(--fg-muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 150ms;
+  white-space: nowrap;
+}
+nav .links a:hover { color: var(--fg); text-decoration: none; }
 
-/* Layout */
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--bg-elevated) 70%, transparent);
+}
+.lang-btn {
+  min-width: 44px;
+  min-height: 32px;
+  padding: 4px 10px;
+  border: 0;
+  border-radius: 6px;
+  color: var(--fg-muted);
+  background: transparent;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  transition: background 150ms, color 150ms;
+}
+.lang-btn:hover { color: var(--fg); background: var(--bg-muted); }
+.lang-btn[aria-pressed="true"] { color: #020617; background: var(--accent); }
+
 .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
-
-section { padding: 80px 0; }
+section { padding: 72px 0; }
 section:first-of-type { padding-top: 136px; }
+.section-tinted { background: color-mix(in srgb, var(--bg-elevated) 40%, transparent); }
+.lang-panel[hidden] { display: none; }
 
-/* Typography */
 h1, h2, h3, h4 { font-family: 'JetBrains Mono', monospace; }
-h1 { font-size: 48px; font-weight: 700; line-height: 1.15; letter-spacing: -0.5px; }
+h1 { font-size: 46px; font-weight: 700; line-height: 1.15; }
 h2 { font-size: 28px; font-weight: 600; margin-bottom: 24px; }
-h3 { font-size: 20px; font-weight: 600; margin-bottom: 12px; }
+h3 { font-size: 20px; font-weight: 600; margin: 28px 0 12px; }
 h4 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
 p { color: var(--fg-muted); margin-bottom: 16px; }
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
+ul { color: var(--fg-muted); margin: 0 0 20px 20px; }
+li { margin: 6px 0; }
 
-/* Badge */
 .badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 4px 12px; border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  border-radius: 999px;
   background: color-mix(in srgb, var(--accent) 12%, transparent);
-  color: var(--accent); font-size: 13px; font-weight: 600;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
   border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
   margin-bottom: 16px;
 }
 .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
 
-/* Hero */
 .hero { text-align: center; }
 .hero h1 { margin-bottom: 16px; }
 .hero h1 .hl { color: var(--accent); }
-.hero .subtitle { font-size: 18px; color: var(--fg-muted); max-width: 600px; margin: 0 auto 32px; }
+.hero .subtitle { font-size: 18px; color: var(--fg-muted); max-width: 680px; margin: 0 auto 32px; }
 
-/* Terminal / Code blocks */
-.terminal {
-  background: #0A0E14;
+.terminal,
+.json-block {
+  position: relative;
+  background: #0a0e14;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   overflow: hidden;
   margin-bottom: 24px;
-  position: relative;
 }
 .terminal-header {
-  display: flex; align-items: center; gap: 8px;
-  padding: 12px 16px; background: color-mix(in srgb, var(--bg-elevated) 60%, transparent);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 12px 16px;
+  background: color-mix(in srgb, var(--bg-elevated) 60%, transparent);
   border-bottom: 1px solid var(--border);
 }
-.terminal-header .dot { width: 10px; height: 10px; border-radius: 50%; }
+.terminal-header .dot { width: 10px; height: 10px; border-radius: 50%; flex: 0 0 auto; }
 .terminal-header .dot:nth-child(1) { background: var(--red); }
 .terminal-header .dot:nth-child(2) { background: var(--yellow); }
 .terminal-header .dot:nth-child(3) { background: var(--accent); }
-.terminal-header .title { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--fg-muted); margin-left: 8px; }
-.terminal-body { padding: 16px; overflow-x: auto; }
-.terminal-body pre { margin: 0; }
-.terminal-body code {
-  font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7;
-  color: var(--fg); white-space: pre;
+.terminal-header .title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--fg-muted);
+  margin-left: 8px;
 }
-/* Syntax highlighting-like classes */
+.terminal-body,
+.json-block { overflow-x: auto; }
+.terminal-body { padding: 16px; }
+.json-block { padding: 16px; }
+.terminal-body pre,
+.json-block pre { margin: 0; }
+.terminal-body code,
+.json-block code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--fg);
+  white-space: pre;
+}
+
 .t-kw { color: var(--purple); }
 .t-str { color: var(--accent); }
 .t-opt { color: var(--blue); }
 .t-cmd { color: var(--yellow); }
-.t-com { color: #546E7A; }
 .t-url { color: var(--blue); }
 
-/* JSON response block */
-.json-block {
-  background: #0A0E14; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; overflow-x: auto; margin-bottom: 24px;
+.copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  min-width: 56px;
+  min-height: 30px;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-muted);
+  color: var(--fg-muted);
+  cursor: pointer;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  opacity: .86;
+  transition: background 150ms, color 150ms, opacity 150ms;
 }
-.json-block code {
-  font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: var(--fg);
-}
+.copy-btn:hover,
+.copy-btn:focus-visible { opacity: 1; background: var(--border); color: var(--fg); }
+.copy-btn.copied { background: var(--accent); color: #020617; border-color: var(--accent); }
 
-/* Cards */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
 .card {
-  background: var(--bg-elevated); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 24px; margin-bottom: 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  margin-bottom: 16px;
 }
-.card h4 { color: var(--fg); }
-.card p { font-size: 14px; }
+.card p { font-size: 14px; margin-bottom: 0; }
 
-/* Feature grid */
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
-
-/* Steps */
 .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; margin: 32px 0; }
 .step { text-align: center; }
 .step-num {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 48px; height: 48px; border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
   background: color-mix(in srgb, var(--accent) 15%, transparent);
-  color: var(--accent); font-family: 'JetBrains Mono', monospace;
-  font-weight: 700; font-size: 20px; margin-bottom: 12px;
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 20px;
+  margin-bottom: 12px;
   border: 2px solid color-mix(in srgb, var(--accent) 30%, transparent);
 }
-.step h4 { margin-bottom: 4px; }
-.step p { font-size: 14px; }
+.step p { font-size: 14px; margin-bottom: 0; }
 
-/* Tabs */
-.tabs { display: flex; gap: 4px; margin-bottom: 16px; flex-wrap: wrap; }
-.tab-btn {
-  padding: 8px 16px; border-radius: var(--radius); border: 1px solid var(--border);
-  background: transparent; color: var(--fg-muted); font-size: 13px; font-weight: 500;
-  cursor: pointer; font-family: 'JetBrains Mono', monospace; transition: all 150ms;
-}
-.tab-btn:hover { background: var(--bg-muted); color: var(--fg); }
-.tab-btn.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 600; }
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-
-/* Table */
 .table-wrap { overflow-x: auto; margin-bottom: 24px; }
 table { width: 100%; border-collapse: collapse; font-size: 14px; }
-th, td { padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); }
-th { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--fg-muted); font-weight: 600; text-transform: uppercase; }
+th, td { padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--fg-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+}
 td { color: var(--fg-muted); }
-td code { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); }
-
-/* Inline code */
-:not(pre) > code {
-  font-family: 'JetBrains Mono', monospace; font-size: 13.5px;
-  background: var(--bg-muted); padding: 2px 6px; border-radius: 4px;
-  color: var(--accent); border: 1px solid var(--border);
+td code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--accent);
 }
 
-/* Highlight box */
+:not(pre) > code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13.5px;
+  background: var(--bg-muted);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--accent);
+  border: 1px solid var(--border);
+}
+
 .callout {
-  padding: 16px 20px; border-radius: var(--radius); margin-bottom: 24px;
+  padding: 16px 20px;
+  border-radius: var(--radius);
+  margin-bottom: 24px;
   border-left: 3px solid var(--blue);
   background: color-mix(in srgb, var(--blue) 8%, transparent);
-  font-size: 14px; color: var(--fg-muted);
+  font-size: 14px;
+  color: var(--fg-muted);
 }
-.callout.warn { border-left-color: var(--yellow); background: color-mix(in srgb, var(--yellow) 8%, transparent); }
 .callout strong { color: var(--fg); }
+.callout.warn { border-left-color: var(--yellow); background: color-mix(in srgb, var(--yellow) 8%, transparent); }
 
-/* Section divider */
-.divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
-
-/* Footer */
 footer { border-top: 1px solid var(--border); padding: 40px 0; text-align: center; }
-footer p { font-size: 14px; color: var(--fg-muted); }
+footer p { font-size: 14px; color: var(--fg-muted); margin-bottom: 0; }
 
-/* Copy button */
-.copy-btn {
-  position: absolute; top: 10px; right: 12px;
-  background: var(--bg-muted); border: 1px solid var(--border); border-radius: 6px;
-  color: var(--fg-muted); cursor: pointer; padding: 4px 10px;
-  font-size: 11px; font-family: 'JetBrains Mono', monospace;
-  transition: all 150ms; opacity: 0;
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+@media (max-width: 900px) {
+  nav .links { gap: 14px; }
 }
-.terminal:hover .copy-btn, .json-block:hover .copy-btn { opacity: 1; }
-.copy-btn:hover { background: var(--border); color: var(--fg); }
-.copy-btn.copied { background: var(--accent); color: #000; border-color: var(--accent); }
 
-/* Responsive */
 @media (max-width: 768px) {
   h1 { font-size: 32px; }
   h2 { font-size: 24px; }
+  nav { padding: 0 16px; }
   nav .links { display: none; }
   section { padding: 48px 0; }
   section:first-of-type { padding-top: 104px; }
   .steps { grid-template-columns: repeat(2, 1fr); }
 }
+
 @media (max-width: 480px) {
+  .container { padding: 0 16px; }
   .steps { grid-template-columns: 1fr; }
-  .terminal-body code { font-size: 11px; }
+  .terminal-body code,
+  .json-block code { font-size: 11.5px; }
+  .copy-btn { position: static; margin-left: auto; }
 }
 
-/* Focus */
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
-
-/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { transition-duration: 0s !important; animation-duration: 0s !important; }
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
+  }
 }
 </style>
 </head>
 <body>
+<a class="skip-link" href="#zh-overview" data-skip-link>Skip to content</a>
 
 <nav>
-  <a href="#" class="logo">Ask<span>4</span>Me</a>
-  <ul class="links">
-    <li><a href="#how-it-works">How It Works</a></li>
-    <li><a href="#quickstart">Quickstart</a></li>
-    <li><a href="#api">API</a></li>
-    <li><a href="#mcd">MCD</a></li>
-    <li><a href="#json-forms">JSON Forms</a></li>
-    <li><a href="#sdk">SDK/CLI</a></li>
-  </ul>
+  <a href="#zh-overview" class="logo" data-target-link data-target="overview">Ask<span>4</span>Me</a>
+  <div class="right">
+    <ul class="links">
+      <li><a href="#zh-overview" data-target-link data-target="overview">概览</a></li>
+      <li><a href="#zh-quickstart" data-target-link data-target="quickstart">快速使用</a></li>
+      <li><a href="#zh-api" data-target-link data-target="api">API</a></li>
+      <li><a href="#zh-mcd" data-target-link data-target="mcd">MCD</a></li>
+      <li><a href="#zh-json-forms" data-target-link data-target="json-forms">JSON Forms</a></li>
+      <li><a href="#zh-sdk" data-target-link data-target="sdk">SDK/CLI</a></li>
+    </ul>
+    <div class="lang-switch" aria-label="Language">
+      <button type="button" class="lang-btn" data-lang="zh" aria-pressed="true">中文</button>
+      <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
 </nav>
 
-<!-- Hero -->
-<section class="hero">
-  <div class="container">
-    <div class="badge">Human-in-the-Loop</div>
-    <h1>Single request,<br>complete the <span class="hl">Human-in-the-Loop</span></h1>
-    <p class="subtitle">Send a request via API. Get a notification with an interaction link. User clicks a button or fills a form. Your original HTTP long-poll returns the result. That's it.</p>
+<main>
+  <div class="lang-panel" data-lang-panel="zh">
+    <section id="zh-overview" class="hero">
+      <div class="container">
+        <div class="badge">Human-in-the-Loop</div>
+        <h1>一个请求，完成一次 <span class="hl">人工确认</span></h1>
+        <p class="subtitle">通过 API 发起请求，Ask4Me 把交互链接推送到通知渠道。你在手机或浏览器里点按钮、输入文字或提交表单，原始 HTTP 长连接拿到最终结果。</p>
 
-    <div class="terminal" style="max-width: 720px; margin: 0 auto 32px;">
-      <div class="terminal-header">
-        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-        <span class="title">Terminal — One-request demo</span>
-        <button class="copy-btn" onclick="copyCode(this, 'hero-demo')">Copy</button>
-      </div>
-      <div class="terminal-body">
-        <pre><code id="hero-demo"><span class="t-cmd">curl</span> <span class="t-opt">-sS --max-time 120</span> \
-  <span class="t-opt">-X</span> POST <span class="t-url">'http://localhost:8080/v1/ask'</span> \
+        <div class="terminal" style="max-width: 760px; margin: 0 auto 32px;">
+          <div class="terminal-header">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="title">Terminal - 一个请求示例</span>
+            <button class="copy-btn" onclick="copyCode(this, 'zh-hero-demo')">复制</button>
+          </div>
+          <div class="terminal-body">
+            <pre><code id="zh-hero-demo"><span class="t-cmd">curl</span> <span class="t-opt">-sS --max-time 120</span> \
+  <span class="t-opt">-X</span> POST <span class="t-url">'<span data-api-url></span>'</span> \
   <span class="t-opt">-H</span> <span class="t-str">'Authorization: Bearer change-me'</span> \
   <span class="t-opt">-H</span> <span class="t-str">'Content-Type: application/json'</span> \
   <span class="t-opt">-d</span> <span class="t-str">'{
     "title": "Ask4Me Demo",
-    "body": "Click a button to respond.",
+    "body": "请点一个按钮回复。",
     "mcd": ":::buttons\n- [OK](ok)\n- [Later](later)\n:::"
   }'</span></code></pre>
-      </div>
-    </div>
+          </div>
+        </div>
 
-    <div class="json-block" style="max-width: 720px; margin: 0 auto; position: relative; text-align: left;">
-      <button class="copy-btn" onclick="copyCode(this, 'hero-resp')">Copy</button>
-      <pre><code id="hero-resp">{
+        <div class="json-block" style="max-width: 760px; margin: 0 auto; text-align: left;">
+          <button class="copy-btn" onclick="copyCode(this, 'zh-hero-resp')">复制</button>
+          <pre><code id="zh-hero-resp">{
   <span class="t-str">"request_id"</span>: <span class="t-str">"req_xxx"</span>,
   <span class="t-str">"last_event_type"</span>: <span class="t-str">"user.submitted"</span>,
   <span class="t-str">"data"</span>: { <span class="t-str">"action"</span>: <span class="t-str">"ok"</span>, <span class="t-str">"text"</span>: <span class="t-str">""</span> },
   <span class="t-str">"last_event_id"</span>: <span class="t-str">"evt_xxx"</span>
 }</code></pre>
-    </div>
-  </div>
-</section>
-
-<!-- How It Works -->
-<section id="how-it-works">
-  <div class="container">
-    <h2>How It Works</h2>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <h4>Send Request</h4>
-        <p>Your script or program POSTs to <code>/v1/ask</code> with a title, body, and interaction controls (buttons or JSON Forms schema).</p>
+        </div>
       </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <h4>Get Notified</h4>
-        <p>Server pushes an interaction link to your notification channel — ServerChan or Apprise. The HTTP request blocks, waiting.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <h4>Human Interacts</h4>
-        <p>Open the link on phone or browser. Click a button, type text, or fill a form. Submit.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">4</div>
-        <h4>Receive Result</h4>
-        <p>The original long-poll returns a JSON response with the user's action and input.</p>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- Quickstart -->
-<section id="quickstart" style="background: color-mix(in srgb, var(--bg-elevated) 40%, transparent);">
-  <div class="container">
-    <h2>Quickstart</h2>
+    <section id="zh-quickstart" class="section-tinted">
+      <div class="container">
+        <h2>快速使用</h2>
+        <p>nonStream 是默认模式：不带 <code>stream=true</code> 时，<code>/v1/ask</code> 会一直等待用户提交或请求过期，然后一次性返回 JSON。</p>
+        <div class="callout">
+          <strong>建议：</strong>请提供 <code>mcd</code> 或 <code>jsonforms.schema</code>，这样交互页才有按钮、输入框或表单可提交。
+        </div>
 
-    <h3>Configuration</h3>
-    <p>Create a <code>.env</code> file with the required variables:</p>
-    <div class="table-wrap">
-    <table>
-      <tr><th>Variable</th><th>Required</th><th>Description</th></tr>
-      <tr><td><code>ASK4ME_BASE_URL</code></td><td>Yes</td><td>Public base URL for building interaction links in notifications</td></tr>
-      <tr><td><code>ASK4ME_API_KEY</code></td><td>Yes</td><td>API authentication key (Bearer token)</td></tr>
-      <tr><td><code>ASK4ME_SERVERCHAN_SENDKEY</code></td><td>Either</td><td>ServerChan notification send key</td></tr>
-      <tr><td><code>ASK4ME_APPRISE_URLS</code></td><td>Either</td><td>Apprise notification URLs (e.g. <code>schan://SCT...</code>)</td></tr>
-      <tr><td><code>ASK4ME_TERMINAL_CACHE_SECONDS</code></td><td>No</td><td>Cache TTL for re-fetching terminal results (default: 60)</td></tr>
-      <tr><td><code>ASK4ME_LISTEN_ADDR</code></td><td>No</td><td>Listen address (default: <code>:8080</code>)</td></tr>
-    </table>
-    </div>
-
-    <h3>Docker</h3>
-    <div class="terminal" style="position: relative;">
-      <div class="terminal-header">
-        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-        <span class="title">Docker Run</span>
-        <button class="copy-btn" onclick="copyCode(this, 'docker-cmd')">Copy</button>
-      </div>
-      <div class="terminal-body">
-        <pre><code id="docker-cmd"><span class="t-cmd">docker</span> run <span class="t-opt">-d</span> \
-  <span class="t-opt">--name</span> ask4me \
-  <span class="t-opt">-p</span> 8080:8080 \
-  <span class="t-opt">-v</span> $(<span class="t-cmd">pwd</span>)/ask4me.db:/data/ask4me.db \
-  <span class="t-opt">-e</span> ASK4ME_BASE_URL=<span class="t-str">https://your-domain.com</span> \
-  <span class="t-opt">-e</span> ASK4ME_API_KEY=<span class="t-str">your-key</span> \
-  <span class="t-opt">-e</span> ASK4ME_SERVERCHAN_SENDKEY=<span class="t-str">your-sendkey</span> \
-  easychen/ask4me:latest</code></pre>
-      </div>
-    </div>
-
-    <div class="callout">
-      <strong>Tip:</strong> The SQLite database is stored at <code>/data/ask4me.db</code> inside the container. Mount a host volume to persist data across restarts.
-    </div>
-  </div>
-</section>
-
-<!-- API Reference -->
-<section id="api">
-  <div class="container">
-    <h2>API Reference</h2>
-
-    <h3>POST /v1/ask (nonStream — Default)</h3>
-    <p>The default mode. The request blocks until the user submits or the request expires, then returns a single JSON response.</p>
-
-    <div class="terminal" style="position: relative;">
-      <div class="terminal-header">
-        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-        <span class="title">POST with MCD buttons</span>
-        <button class="copy-btn" onclick="copyCode(this, 'post-mcd')">Copy</button>
-      </div>
-      <div class="terminal-body">
-        <pre><code id="post-mcd"><span class="t-cmd">curl</span> <span class="t-opt">-sS --max-time 120</span> \
-  <span class="t-opt">-X</span> POST <span class="t-url">'http://localhost:8080/v1/ask'</span> \
+        <h3>POST 裸请求</h3>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="title">POST with MCD buttons</span>
+            <button class="copy-btn" onclick="copyCode(this, 'zh-post-mcd')">复制</button>
+          </div>
+          <div class="terminal-body">
+            <pre><code id="zh-post-mcd"><span class="t-cmd">curl</span> <span class="t-opt">-sS --max-time 120</span> \
+  <span class="t-opt">-X</span> POST <span class="t-url">'<span data-api-url></span>'</span> \
   <span class="t-opt">-H</span> <span class="t-str">'Authorization: Bearer change-me'</span> \
   <span class="t-opt">-H</span> <span class="t-str">'Content-Type: application/json'</span> \
   <span class="t-opt">-d</span> <span class="t-str">'{
-    "title": "Deploy to production?",
-    "body": "Click a button to approve or reject.",
-    "mcd": ":::buttons\n- [Approve](ok)\n- [Reject](reject)\n:::",
+    "title": "Ask4Me Demo",
+    "body": "请选择一个动作。",
+    "mcd": ":::buttons\n- [OK](ok)\n- [Later](later)\n:::",
     "expires_in_seconds": 600
   }'</span></code></pre>
-      </div>
-    </div>
+          </div>
+        </div>
 
-    <h4>Request Parameters</h4>
-    <div class="table-wrap">
-    <table>
-      <tr><th>Field</th><th>Type</th><th>Description</th></tr>
-      <tr><td><code>title</code></td><td>string</td><td>Notification / interaction page title</td></tr>
-      <tr><td><code>body</code></td><td>string</td><td>Message body shown in notification and page</td></tr>
-      <tr><td><code>mcd</code></td><td>string</td><td>Interaction control description (buttons + inputs)</td></tr>
-      <tr><td><code>jsonforms</code></td><td>object</td><td>JSON Forms schema-driven form (ignores mcd if present)</td></tr>
-      <tr><td><code>expires_in_seconds</code></td><td>int</td><td>Request expiration time (default: 3600)</td></tr>
-      <tr><td><code>serverchan_action_links</code></td><td>bool</td><td>Enable clickable Action Links in ServerChan 3 notifications</td></tr>
-      <tr><td><code>request_id</code></td><td>string</td><td>Pre-generated request ID (must start with <code>req_</code>)</td></tr>
-    </table>
-    </div>
-
-    <h4>Terminal Event Types</h4>
-    <div class="table-wrap">
-    <table>
-      <tr><th>Event</th><th>Meaning</th></tr>
-      <tr><td><code>user.submitted</code></td><td>User clicked a button or submitted input/form</td></tr>
-      <tr><td><code>request.expired</code></td><td>Request expired without user interaction</td></tr>
-      <tr><td><code>notify.failed</code></td><td>Notification delivery failed (check channel config)</td></tr>
-    </table>
-    </div>
-
-    <h3>GET /v1/ask</h3>
-    <p>For environments where setting HTTP headers is difficult. Pass <code>key</code> as a query parameter instead of <code>Authorization</code> header.</p>
-
-    <div class="terminal" style="position: relative;">
-      <div class="terminal-header">
-        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-        <span class="title">GET with query params</span>
-        <button class="copy-btn" onclick="copyCode(this, 'get-example')">Copy</button>
-      </div>
-      <div class="terminal-body">
-        <pre><code id="get-example"><span class="t-cmd">curl</span> <span class="t-opt">-sS --max-time 120 -G</span> <span class="t-url">'http://localhost:8080/v1/ask'</span> \
+        <h3>GET 裸请求</h3>
+        <p>如果环境不方便设置 <code>Authorization</code> header，可以用 GET 并在 URL 上带 <code>key</code>。</p>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="title">GET with query params</span>
+            <button class="copy-btn" onclick="copyCode(this, 'zh-get-example')">复制</button>
+          </div>
+          <div class="terminal-body">
+            <pre><code id="zh-get-example"><span class="t-cmd">curl</span> <span class="t-opt">-sS --max-time 120 -G</span> <span class="t-url">'<span data-api-url></span>'</span> \
   <span class="t-opt">--data-urlencode</span> <span class="t-str">'key=change-me'</span> \
   <span class="t-opt">--data-urlencode</span> <span class="t-str">'title=Ask4Me Demo'</span> \
-  <span class="t-opt">--data-urlencode</span> <span class="t-str">'body=Click a button to respond.'</span> \
+  <span class="t-opt">--data-urlencode</span> <span class="t-str">'body=请点一个按钮回复。'</span> \
   <span class="t-opt">--data-urlencode</span> $<span class="t-str">'mcd=:::buttons\n- [OK](ok)\n- [Later](later)\n:::'</span></code></pre>
+          </div>
+        </div>
+        <div class="callout warn">
+          <strong>安全提示：</strong>URL 参数可能被代理或日志记录；能用 POST + Authorization 时优先用 POST。
+        </div>
       </div>
-    </div>
+    </section>
 
-    <div class="callout warn">
-      <strong>Security note:</strong> Query parameters may be logged by proxies. Prefer POST + Authorization header when possible.
-    </div>
+    <section id="zh-api">
+      <div class="container">
+        <h2>API 用法</h2>
 
-    <h3>SSE Mode (stream=true)</h3>
-    <p>Receive events in real-time, including <code>request.created</code> which contains the <code>interaction_url</code>.</p>
+        <h3>续接等待</h3>
+        <p>当客户端超时后，可以用同一个 <code>request_id</code> 再请求一次，继续等待或取回终态结果。</p>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="title">Resume after timeout</span>
+            <button class="copy-btn" onclick="copyCode(this, 'zh-resume')">复制</button>
+          </div>
+          <div class="terminal-body">
+            <pre><code id="zh-resume"><span class="t-cmd">curl</span> <span class="t-opt">-sS --max-time 40 -G</span> <span class="t-url">'<span data-api-url></span>'</span> \
+  <span class="t-opt">--data-urlencode</span> <span class="t-str">'key=change-me'</span> \
+  <span class="t-opt">--data-urlencode</span> <span class="t-str">'request_id=req_xxx'</span></code></pre>
+          </div>
+        </div>
 
-    <div class="terminal" style="position: relative;">
-      <div class="terminal-header">
-        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-        <span class="title">SSE stream</span>
-        <button class="copy-btn" onclick="copyCode(this, 'sse-example')">Copy</button>
-      </div>
-      <div class="terminal-body">
-        <pre><code id="sse-example"><span class="t-cmd">curl</span> <span class="t-opt">-N -sS</span> \
-  <span class="t-opt">-X</span> POST <span class="t-url">'http://localhost:8080/v1/ask?stream=true'</span> \
+        <h3>SSE 备用模式</h3>
+        <p>需要实时拿到 <code>request.created</code> 和后续事件流时，使用 <code>stream=true</code>。</p>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="title">SSE stream</span>
+            <button class="copy-btn" onclick="copyCode(this, 'zh-sse-example')">复制</button>
+          </div>
+          <div class="terminal-body">
+            <pre><code id="zh-sse-example"><span class="t-cmd">curl</span> <span class="t-opt">-N -sS</span> \
+  <span class="t-opt">-X</span> POST <span class="t-url">'<span data-api-stream-url></span>'</span> \
   <span class="t-opt">-H</span> <span class="t-str">'Authorization: Bearer change-me'</span> \
   <span class="t-opt">-H</span> <span class="t-str">'Content-Type: application/json'</span> \
   <span class="t-opt">-d</span> <span class="t-str">'{
@@ -453,108 +479,403 @@ footer p { font-size: 14px; color: var(--fg-muted); }
     "body": "Please respond.",
     "mcd": ":::buttons\n- [OK](ok)\n:::"
   }'</span></code></pre>
+          </div>
+        </div>
+        <p>SSE 输出格式为 <code>data: &lt;Event JSON&gt;\n\n</code>，结束标记为 <code>data: [DONE]\n\n</code>。响应头会带 <code>X-Ask4Me-Request-Id</code>。</p>
+
+        <h3>终态事件</h3>
+        <div class="table-wrap">
+          <table>
+            <tr><th>事件</th><th>含义</th></tr>
+            <tr><td><code>user.submitted</code></td><td>用户点击按钮、提交输入或提交表单</td></tr>
+            <tr><td><code>request.expired</code></td><td>请求到期仍未提交</td></tr>
+            <tr><td><code>notify.failed</code></td><td>通知发送失败，通常是通知渠道不可用或返回错误</td></tr>
+          </table>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <p>SSE output format: <code>data: &lt;Event JSON&gt;\n\n</code>, ending with <code>data: [DONE]\n\n</code>. Response includes <code>X-Ask4Me-Request-Id</code> header.</p>
+    <section id="zh-mcd" class="section-tinted">
+      <div class="container">
+        <h2>MCD 语法</h2>
+        <p>MCD 是交互控件描述。它会在交互页里渲染按钮和输入框。</p>
 
-    <h3>Resume Waiting with request_id</h3>
-    <p>If your client times out, resume waiting with the same <code>request_id</code>:</p>
+        <h3>Buttons 块</h3>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="title">MCD Buttons</span>
+            <button class="copy-btn" onclick="copyCode(this, 'zh-mcd-buttons')">复制</button>
+          </div>
+          <div class="terminal-body">
+            <pre><code id="zh-mcd-buttons">:::buttons
+- [OK](ok)
+- [Later](later)
+:::</code></pre>
+          </div>
+        </div>
 
-    <div class="terminal" style="position: relative;">
-      <div class="terminal-header">
-        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-        <span class="title">Resume after timeout</span>
-        <button class="copy-btn" onclick="copyCode(this, 'resume')">Copy</button>
+        <h3>Input 行</h3>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="title">MCD Input</span>
+            <button class="copy-btn" onclick="copyCode(this, 'zh-mcd-input')">复制</button>
+          </div>
+          <div class="terminal-body">
+            <pre><code id="zh-mcd-input">:::input name="note" label="补充说明" submit="提交"
+:::</code></pre>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <h4>按钮结果</h4>
+            <p>用户点击按钮后，提交值会出现在终态结果的 <code>data.action</code>。</p>
+          </div>
+          <div class="card">
+            <h4>输入结果</h4>
+            <p>用户提交输入后，文本会出现在终态结果的 <code>data.text</code>。</p>
+          </div>
+          <div class="card">
+            <h4>混合使用</h4>
+            <p>按钮和输入框可以同时出现；任一提交都会完成这次交互。</p>
+          </div>
+        </div>
       </div>
-      <div class="terminal-body">
-        <pre><code id="resume"><span class="t-cmd">curl</span> <span class="t-opt">-sS --max-time 40 -G</span> <span class="t-url">'http://localhost:8080/v1/ask'</span> \
+    </section>
+
+    <section id="zh-json-forms">
+      <div class="container">
+        <h2>JSON Forms</h2>
+        <p>需要更复杂的表单时，POST JSON 里提供 <code>jsonforms.schema</code>。当提供 <code>jsonforms.schema</code> 时，交互页会渲染表单并忽略 <code>mcd</code>。</p>
+
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="title">JSON Forms POST</span>
+            <button class="copy-btn" onclick="copyCode(this, 'zh-jsonforms')">复制</button>
+          </div>
+          <div class="terminal-body">
+            <pre><code id="zh-jsonforms"><span class="t-cmd">curl</span> <span class="t-opt">-sS --max-time 120</span> \
+  <span class="t-opt">-X</span> POST <span class="t-url">'<span data-api-url></span>'</span> \
+  <span class="t-opt">-H</span> <span class="t-str">'Authorization: Bearer change-me'</span> \
+  <span class="t-opt">-H</span> <span class="t-str">'Content-Type: application/json'</span> \
+  <span class="t-opt">-d</span> <span class="t-str">'{
+    "title": "JSON Forms Demo",
+    "body": "请填写表单。",
+    "jsonforms": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "age": { "type": "integer", "minimum": 0 }
+        },
+        "required": ["name"]
+      },
+      "uischema": {
+        "type": "VerticalLayout",
+        "elements": [
+          { "type": "Control", "scope": "#/properties/name" },
+          { "type": "Control", "scope": "#/properties/age" }
+        ]
+      },
+      "data": { "age": 18 },
+      "submit_label": "提交"
+    },
+    "expires_in_seconds": 600
+  }'</span></code></pre>
+          </div>
+        </div>
+
+        <p>表单提交后，终态事件 <code>user.submitted</code> 的 <code>data</code> 会包含 <code>payload</code>。</p>
+        <div class="json-block">
+          <button class="copy-btn" onclick="copyCode(this, 'zh-jsonforms-resp')">复制</button>
+          <pre><code id="zh-jsonforms-resp">{
+  <span class="t-str">"action"</span>: <span class="t-str">""</span>,
+  <span class="t-str">"text"</span>: <span class="t-str">""</span>,
+  <span class="t-str">"payload"</span>: { <span class="t-str">"name"</span>: <span class="t-str">"Alice"</span>, <span class="t-str">"age"</span>: 18 }
+}</code></pre>
+        </div>
+
+        <h3>扩展用法</h3>
+        <div class="grid">
+          <div class="card">
+            <h4>可折叠分组</h4>
+            <p>在 Group 的 <code>options</code> 中设置 <code>collapsible: true</code>，可把一组字段放进折叠区。</p>
+          </div>
+          <div class="card">
+            <h4>长文本说明</h4>
+            <p>Label 支持 <code>maxHeight</code>、<code>collapsible</code> 和 <code>markdown: true</code>，适合展示长说明。</p>
+          </div>
+          <div class="card">
+            <h4>只读长文本</h4>
+            <p>Control 设置 <code>readonlyBlock: true</code> 后，可把字符串字段显示为不可编辑的滚动块。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="zh-sdk" class="section-tinted">
+      <div class="container">
+        <h2>JavaScript SDK 与 CLI</h2>
+
+        <h3>JavaScript SDK</h3>
+        <p>SDK 默认使用 SSE 模式，适合在程序里实时消费事件。</p>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="title">SDK Example</span>
+            <button class="copy-btn" onclick="copyCode(this, 'zh-sdk-code')">复制</button>
+          </div>
+          <div class="terminal-body">
+            <pre><code id="zh-sdk-code"><span class="t-cmd">npm</span> i ask4me-sdk
+
+<span class="t-kw">import</span> { ask } <span class="t-kw">from</span> <span class="t-str">"ask4me-sdk"</span>;
+
+<span class="t-kw">const</span> endpoint = <span class="t-str">"<span data-api-url></span>"</span>;
+<span class="t-kw">const</span> apiKey = <span class="t-str">"change-me"</span>;
+
+<span class="t-kw">const</span> { requestId, result } = <span class="t-kw">await</span> ask({
+  endpoint,
+  apiKey,
+  payload: {
+    title: <span class="t-str">"Ask4Me Demo"</span>,
+    body: <span class="t-str">"请随便点一个按钮或回一段话。"</span>,
+    mcd: <span class="t-str">":::buttons\n- [OK](ok)\n- [Later](later)\n:::"</span>
+  },
+  onEvent: (ev) => process.stdout.write(<span class="t-str">`${JSON.stringify(ev)}\n`</span>)
+});
+
+console.log(<span class="t-str">"request_id:"</span>, requestId);
+console.log(<span class="t-str">"final:"</span>, result);</code></pre>
+          </div>
+        </div>
+
+        <h3>CLI</h3>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="title">CLI Usage</span>
+            <button class="copy-btn" onclick="copyCode(this, 'zh-cli-code')">复制</button>
+          </div>
+          <div class="terminal-body">
+            <pre><code id="zh-cli-code"><span class="t-cmd">npm</span> i -g ask4me-cli
+
+<span class="t-cmd">ask4me-cli</span> <span class="t-opt">-h</span> <span data-base-url></span> <span class="t-opt">-k</span> change-me \
+  <span class="t-opt">--title</span> <span class="t-str">'Ask4Me'</span> <span class="t-opt">--body</span> <span class="t-str">'请回复确认。'</span></code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="lang-panel" data-lang-panel="en" hidden>
+    <section id="en-overview" class="hero">
+      <div class="container">
+        <div class="badge">Human-in-the-Loop</div>
+        <h1>One request,<br>one <span class="hl">human decision</span></h1>
+        <p class="subtitle">Create a request through the API. Ask4Me sends an interaction link to your notification channel. A human clicks a button, enters text, or submits a form, and the original HTTP long-poll receives the final result.</p>
+
+        <div class="terminal" style="max-width: 760px; margin: 0 auto 32px;">
+          <div class="terminal-header">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="title">Terminal - one request demo</span>
+            <button class="copy-btn" onclick="copyCode(this, 'en-hero-demo')">Copy</button>
+          </div>
+          <div class="terminal-body">
+            <pre><code id="en-hero-demo"><span class="t-cmd">curl</span> <span class="t-opt">-sS --max-time 120</span> \
+  <span class="t-opt">-X</span> POST <span class="t-url">'<span data-api-url></span>'</span> \
+  <span class="t-opt">-H</span> <span class="t-str">'Authorization: Bearer change-me'</span> \
+  <span class="t-opt">-H</span> <span class="t-str">'Content-Type: application/json'</span> \
+  <span class="t-opt">-d</span> <span class="t-str">'{
+    "title": "Ask4Me Demo",
+    "body": "Click a button to respond.",
+    "mcd": ":::buttons\n- [OK](ok)\n- [Later](later)\n:::"
+  }'</span></code></pre>
+          </div>
+        </div>
+
+        <div class="json-block" style="max-width: 760px; margin: 0 auto; text-align: left;">
+          <button class="copy-btn" onclick="copyCode(this, 'en-hero-resp')">Copy</button>
+          <pre><code id="en-hero-resp">{
+  <span class="t-str">"request_id"</span>: <span class="t-str">"req_xxx"</span>,
+  <span class="t-str">"last_event_type"</span>: <span class="t-str">"user.submitted"</span>,
+  <span class="t-str">"data"</span>: { <span class="t-str">"action"</span>: <span class="t-str">"ok"</span>, <span class="t-str">"text"</span>: <span class="t-str">""</span> },
+  <span class="t-str">"last_event_id"</span>: <span class="t-str">"evt_xxx"</span>
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="en-quickstart" class="section-tinted">
+      <div class="container">
+        <h2>Quick Use</h2>
+        <p>nonStream is the default mode. Without <code>stream=true</code>, <code>/v1/ask</code> waits until the user submits or the request expires, then returns one JSON response.</p>
+        <div class="callout">
+          <strong>Recommendation:</strong> provide <code>mcd</code> or <code>jsonforms.schema</code> so the interaction page has a button, input, or form to submit.
+        </div>
+
+        <h3>POST request</h3>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="title">POST with MCD buttons</span>
+            <button class="copy-btn" onclick="copyCode(this, 'en-post-mcd')">Copy</button>
+          </div>
+          <div class="terminal-body">
+            <pre><code id="en-post-mcd"><span class="t-cmd">curl</span> <span class="t-opt">-sS --max-time 120</span> \
+  <span class="t-opt">-X</span> POST <span class="t-url">'<span data-api-url></span>'</span> \
+  <span class="t-opt">-H</span> <span class="t-str">'Authorization: Bearer change-me'</span> \
+  <span class="t-opt">-H</span> <span class="t-str">'Content-Type: application/json'</span> \
+  <span class="t-opt">-d</span> <span class="t-str">'{
+    "title": "Ask4Me Demo",
+    "body": "Choose an action.",
+    "mcd": ":::buttons\n- [OK](ok)\n- [Later](later)\n:::",
+    "expires_in_seconds": 600
+  }'</span></code></pre>
+          </div>
+        </div>
+
+        <h3>GET request</h3>
+        <p>For environments where setting <code>Authorization</code> headers is difficult, pass <code>key</code> as a query parameter.</p>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="title">GET with query params</span>
+            <button class="copy-btn" onclick="copyCode(this, 'en-get-example')">Copy</button>
+          </div>
+          <div class="terminal-body">
+            <pre><code id="en-get-example"><span class="t-cmd">curl</span> <span class="t-opt">-sS --max-time 120 -G</span> <span class="t-url">'<span data-api-url></span>'</span> \
+  <span class="t-opt">--data-urlencode</span> <span class="t-str">'key=change-me'</span> \
+  <span class="t-opt">--data-urlencode</span> <span class="t-str">'title=Ask4Me Demo'</span> \
+  <span class="t-opt">--data-urlencode</span> <span class="t-str">'body=Click a button to respond.'</span> \
+  <span class="t-opt">--data-urlencode</span> $<span class="t-str">'mcd=:::buttons\n- [OK](ok)\n- [Later](later)\n:::'</span></code></pre>
+          </div>
+        </div>
+        <div class="callout warn">
+          <strong>Security note:</strong> URL parameters may be logged by proxies. Prefer POST + Authorization when possible.
+        </div>
+      </div>
+    </section>
+
+    <section id="en-api">
+      <div class="container">
+        <h2>API Usage</h2>
+
+        <h3>Resume waiting</h3>
+        <p>If your client times out, call again with the same <code>request_id</code> to keep waiting or retrieve the terminal result.</p>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="title">Resume after timeout</span>
+            <button class="copy-btn" onclick="copyCode(this, 'en-resume')">Copy</button>
+          </div>
+          <div class="terminal-body">
+            <pre><code id="en-resume"><span class="t-cmd">curl</span> <span class="t-opt">-sS --max-time 40 -G</span> <span class="t-url">'<span data-api-url></span>'</span> \
   <span class="t-opt">--data-urlencode</span> <span class="t-str">'key=change-me'</span> \
   <span class="t-opt">--data-urlencode</span> <span class="t-str">'request_id=req_xxx'</span></code></pre>
-      </div>
-    </div>
-  </div>
-</section>
+          </div>
+        </div>
 
-<!-- MCD Syntax -->
-<section id="mcd" style="background: color-mix(in srgb, var(--bg-elevated) 40%, transparent);">
-  <div class="container">
-    <h2>MCD Syntax</h2>
-    <p>MCD (Interaction Control Description) defines buttons and inputs for the interaction page. It supports two structures:</p>
+        <h3>SSE mode</h3>
+        <p>Use <code>stream=true</code> when you need real-time events, including <code>request.created</code> and the interaction URL.</p>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="title">SSE stream</span>
+            <button class="copy-btn" onclick="copyCode(this, 'en-sse-example')">Copy</button>
+          </div>
+          <div class="terminal-body">
+            <pre><code id="en-sse-example"><span class="t-cmd">curl</span> <span class="t-opt">-N -sS</span> \
+  <span class="t-opt">-X</span> POST <span class="t-url">'<span data-api-stream-url></span>'</span> \
+  <span class="t-opt">-H</span> <span class="t-str">'Authorization: Bearer change-me'</span> \
+  <span class="t-opt">-H</span> <span class="t-str">'Content-Type: application/json'</span> \
+  <span class="t-opt">-d</span> <span class="t-str">'{
+    "title": "Ask4Me",
+    "body": "Please respond.",
+    "mcd": ":::buttons\n- [OK](ok)\n:::"
+  }'</span></code></pre>
+          </div>
+        </div>
+        <p>SSE output is <code>data: &lt;Event JSON&gt;\n\n</code>, ending with <code>data: [DONE]\n\n</code>. The response includes <code>X-Ask4Me-Request-Id</code>.</p>
 
-    <h3>Buttons Block</h3>
-    <div class="terminal" style="position: relative;">
-      <div class="terminal-header">
-        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-        <span class="title">MCD Buttons</span>
-        <button class="copy-btn" onclick="copyCode(this, 'mcd-buttons')">Copy</button>
+        <h3>Terminal event types</h3>
+        <div class="table-wrap">
+          <table>
+            <tr><th>Event</th><th>Meaning</th></tr>
+            <tr><td><code>user.submitted</code></td><td>User clicked a button, submitted input, or submitted a form</td></tr>
+            <tr><td><code>request.expired</code></td><td>The request expired without user interaction</td></tr>
+            <tr><td><code>notify.failed</code></td><td>Notification delivery failed because the notification channel was unavailable or returned an error</td></tr>
+          </table>
+        </div>
       </div>
-      <div class="terminal-body">
-        <pre><code id="mcd-buttons">:::buttons
+    </section>
+
+    <section id="en-mcd" class="section-tinted">
+      <div class="container">
+        <h2>MCD Syntax</h2>
+        <p>MCD is the interaction control description. The interaction page renders buttons and inputs from it.</p>
+
+        <h3>Buttons block</h3>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="title">MCD Buttons</span>
+            <button class="copy-btn" onclick="copyCode(this, 'en-mcd-buttons')">Copy</button>
+          </div>
+          <div class="terminal-body">
+            <pre><code id="en-mcd-buttons">:::buttons
 - [OK](ok)
 - [Later](later)
-- [Reject](reject)
 :::</code></pre>
-      </div>
-    </div>
-    <div class="card">
-      <h4>Rules</h4>
-      <p><code>label</code> is the button text. <code>value</code> appears in the result as <code>data.action</code>. The ending line must be a single <code>:::</code>.</p>
-    </div>
+          </div>
+        </div>
 
-    <h3>Input Line</h3>
-    <div class="terminal" style="position: relative;">
-      <div class="terminal-header">
-        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-        <span class="title">MCD Input</span>
-        <button class="copy-btn" onclick="copyCode(this, 'mcd-input')">Copy</button>
-      </div>
-      <div class="terminal-body">
-        <pre><code id="mcd-input">:::input name="note" label="Note" submit="Submit"
+        <h3>Input line</h3>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="title">MCD Input</span>
+            <button class="copy-btn" onclick="copyCode(this, 'en-mcd-input')">Copy</button>
+          </div>
+          <div class="terminal-body">
+            <pre><code id="en-mcd-input">:::input name="note" label="Note" submit="Submit"
 :::</code></pre>
-      </div>
-    </div>
-    <div class="card">
-      <h4>Rules</h4>
-      <p><code>label</code> is hint text above the input. <code>submit</code> is the submit button text. <code>name</code> is parsed but the result still uses <code>data.text</code>.</p>
-    </div>
+          </div>
+        </div>
 
-    <h3>Buttons + Input Together</h3>
-    <div class="terminal" style="position: relative;">
-      <div class="terminal-header">
-        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-        <span class="title">Combined MCD</span>
-        <button class="copy-btn" onclick="copyCode(this, 'mcd-combined')">Copy</button>
+        <div class="grid">
+          <div class="card">
+            <h4>Button result</h4>
+            <p>When a user clicks a button, its value appears in the final result as <code>data.action</code>.</p>
+          </div>
+          <div class="card">
+            <h4>Input result</h4>
+            <p>When a user submits text, the text appears in the final result as <code>data.text</code>.</p>
+          </div>
+          <div class="card">
+            <h4>Combined controls</h4>
+            <p>Buttons and inputs can appear together. Either submission completes the interaction.</p>
+          </div>
+        </div>
       </div>
-      <div class="terminal-body">
-        <pre><code id="mcd-combined">:::buttons
-- [OK](ok)
-- [Later](later)
-:::
+    </section>
 
-:::input name="note" label="Note" submit="Submit"
-:::</code></pre>
-      </div>
-    </div>
-    <p>Clicking a button or submitting text both complete the interaction. The page shows "Submitted." afterward.</p>
-  </div>
-</section>
+    <section id="en-json-forms">
+      <div class="container">
+        <h2>JSON Forms</h2>
+        <p>For richer interactions, provide <code>jsonforms.schema</code> in a POST JSON body. When present, the interaction page renders the form and ignores <code>mcd</code>.</p>
 
-<!-- JSON Forms -->
-<section id="json-forms">
-  <div class="container">
-    <h2>JSON Forms</h2>
-    <p>For complex interactions, provide a <code>jsonforms</code> object with JSON Schema, UI Schema, and optional initial data. When present, the interaction page renders the form and ignores <code>mcd</code>. <strong>POST-only.</strong></p>
-
-    <div class="terminal" style="position: relative;">
-      <div class="terminal-header">
-        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-        <span class="title">JSON Forms POST</span>
-        <button class="copy-btn" onclick="copyCode(this, 'jsonforms')">Copy</button>
-      </div>
-      <div class="terminal-body">
-        <pre><code id="jsonforms"><span class="t-cmd">curl</span> <span class="t-opt">-sS --max-time 120</span> \
-  <span class="t-opt">-X</span> POST <span class="t-url">'http://localhost:8080/v1/ask'</span> \
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="title">JSON Forms POST</span>
+            <button class="copy-btn" onclick="copyCode(this, 'en-jsonforms')">Copy</button>
+          </div>
+          <div class="terminal-body">
+            <pre><code id="en-jsonforms"><span class="t-cmd">curl</span> <span class="t-opt">-sS --max-time 120</span> \
+  <span class="t-opt">-X</span> POST <span class="t-url">'<span data-api-url></span>'</span> \
   <span class="t-opt">-H</span> <span class="t-str">'Authorization: Bearer change-me'</span> \
   <span class="t-opt">-H</span> <span class="t-str">'Content-Type: application/json'</span> \
   <span class="t-opt">-d</span> <span class="t-str">'{
@@ -581,57 +902,55 @@ footer p { font-size: 14px; color: var(--fg-muted); }
     },
     "expires_in_seconds": 600
   }'</span></code></pre>
-      </div>
-    </div>
+          </div>
+        </div>
 
-    <p>Form submission returns <code>payload</code> in the result:</p>
-    <div class="json-block" style="position: relative;">
-      <button class="copy-btn" onclick="copyCode(this, 'jsonforms-resp')">Copy</button>
-      <pre><code id="jsonforms-resp">{
+        <p>After form submission, <code>user.submitted</code> includes <code>payload</code> in <code>data</code>.</p>
+        <div class="json-block">
+          <button class="copy-btn" onclick="copyCode(this, 'en-jsonforms-resp')">Copy</button>
+          <pre><code id="en-jsonforms-resp">{
   <span class="t-str">"action"</span>: <span class="t-str">""</span>,
   <span class="t-str">"text"</span>: <span class="t-str">""</span>,
   <span class="t-str">"payload"</span>: { <span class="t-str">"name"</span>: <span class="t-str">"Alice"</span>, <span class="t-str">"age"</span>: 18 }
 }</code></pre>
-    </div>
+        </div>
 
-    <h3>UI Extensions</h3>
-    <p>Three custom renderers triggered via the <code>options</code> field — no extra <code>type</code> required:</p>
-
-    <div class="grid">
-      <div class="card">
-        <h4>Collapsible Group</h4>
-        <p>Wrap fields in a collapsible <code>&lt;details&gt;</code> section. Use <code>collapsible: true</code>, <code>defaultOpen</code>, and <code>maxHeight</code> in Group options.</p>
+        <h3>Extensions</h3>
+        <div class="grid">
+          <div class="card">
+            <h4>Collapsible group</h4>
+            <p>Set <code>collapsible: true</code> in Group <code>options</code> to put fields inside a collapsible section.</p>
+          </div>
+          <div class="card">
+            <h4>Long label</h4>
+            <p>Label supports <code>maxHeight</code>, <code>collapsible</code>, and <code>markdown: true</code> for long instructions.</p>
+          </div>
+          <div class="card">
+            <h4>Read-only block</h4>
+            <p>Set <code>readonlyBlock: true</code> on a Control to render a string field as a non-editable scrolling block.</p>
+          </div>
+        </div>
       </div>
-      <div class="card">
-        <h4>Long Label (Markdown)</h4>
-        <p>Static text with optional scrolling and collapsing. Set <code>markdown: true</code> to render GFM. Sanitized with DOMPurify.</p>
-      </div>
-      <div class="card">
-        <h4>Read-only Block</h4>
-        <p>Bind a string field as non-editable scrollable text. Opt-in with <code>readonlyBlock: true</code> on a Control. Supports Markdown.</p>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- SDK & CLI -->
-<section id="sdk" style="background: color-mix(in srgb, var(--bg-elevated) 40%, transparent);">
-  <div class="container">
-    <h2>SDK &amp; CLI</h2>
+    <section id="en-sdk" class="section-tinted">
+      <div class="container">
+        <h2>JavaScript SDK and CLI</h2>
 
-    <h3>JavaScript SDK</h3>
-    <p>Uses SSE mode by default. Install: <code>npm i ask4me-sdk</code></p>
+        <h3>JavaScript SDK</h3>
+        <p>The SDK uses SSE mode by default and is useful when a program needs to consume events in real time.</p>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="title">SDK Example</span>
+            <button class="copy-btn" onclick="copyCode(this, 'en-sdk-code')">Copy</button>
+          </div>
+          <div class="terminal-body">
+            <pre><code id="en-sdk-code"><span class="t-cmd">npm</span> i ask4me-sdk
 
-    <div class="terminal" style="position: relative;">
-      <div class="terminal-header">
-        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-        <span class="title">SDK Example</span>
-        <button class="copy-btn" onclick="copyCode(this, 'sdk-code')">Copy</button>
-      </div>
-      <div class="terminal-body">
-        <pre><code id="sdk-code"><span class="t-kw">import</span> { ask } <span class="t-kw">from</span> <span class="t-str">"ask4me-sdk"</span>;
+<span class="t-kw">import</span> { ask } <span class="t-kw">from</span> <span class="t-str">"ask4me-sdk"</span>;
 
-<span class="t-kw">const</span> endpoint = <span class="t-str">"http://localhost:8080/v1/ask"</span>;
+<span class="t-kw">const</span> endpoint = <span class="t-str">"<span data-api-url></span>"</span>;
 <span class="t-kw">const</span> apiKey = <span class="t-str">"change-me"</span>;
 
 <span class="t-kw">const</span> { requestId, result } = <span class="t-kw">await</span> ask({
@@ -640,73 +959,194 @@ footer p { font-size: 14px; color: var(--fg-muted); }
   payload: {
     title: <span class="t-str">"Ask4Me Demo"</span>,
     body: <span class="t-str">"Click a button or type a reply."</span>,
-    mcd:
-      <span class="t-str">":::buttons\n"</span> +
-      <span class="t-str">"- [OK](ok)\n"</span> +
-      <span class="t-str">"- [Later](later)\n"</span> +
-      <span class="t-str">":::\n\n"</span> +
-      <span class="t-str">":::input name=\"note\" label=\"Note\" submit=\"Submit\"\n"</span> +
-      <span class="t-str">":::"</span>,
-    expires_in_seconds: 600
+    mcd: <span class="t-str">":::buttons\n- [OK](ok)\n- [Later](later)\n:::"</span>
   },
-  onEvent: (ev) => {
-    process.stdout.write(<span class="t-str">`${JSON.stringify(ev)}\n`</span>);
-  }
+  onEvent: (ev) => process.stdout.write(<span class="t-str">`${JSON.stringify(ev)}\n`</span>)
 });
 
 console.log(<span class="t-str">"request_id:"</span>, requestId);
 console.log(<span class="t-str">"final:"</span>, result);</code></pre>
-      </div>
-    </div>
+          </div>
+        </div>
 
-    <h3>CLI</h3>
-    <p>Install: <code>npm i -g ask4me-cli</code></p>
-    <div class="terminal" style="position: relative;">
-      <div class="terminal-header">
-        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-        <span class="title">CLI Usage</span>
-        <button class="copy-btn" onclick="copyCode(this, 'cli-code')">Copy</button>
-      </div>
-      <div class="terminal-body">
-        <pre><code id="cli-code"><span class="t-cmd">ask4me-cli</span> <span class="t-opt">-h</span> http://localhost:8080 <span class="t-opt">-k</span> change-me \
+        <h3>CLI</h3>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="title">CLI Usage</span>
+            <button class="copy-btn" onclick="copyCode(this, 'en-cli-code')">Copy</button>
+          </div>
+          <div class="terminal-body">
+            <pre><code id="en-cli-code"><span class="t-cmd">npm</span> i -g ask4me-cli
+
+<span class="t-cmd">ask4me-cli</span> <span class="t-opt">-h</span> <span data-base-url></span> <span class="t-opt">-k</span> change-me \
   <span class="t-opt">--title</span> <span class="t-str">'Ask4Me'</span> <span class="t-opt">--body</span> <span class="t-str">'Please respond.'</span></code></pre>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
   </div>
-</section>
+</main>
 
-<!-- Footer -->
 <footer>
   <div class="container">
-    <p>Ask4Me — <a href="https://github.com/easychen/ask4me" target="_blank" rel="noopener">github.com/easychen/ask4me</a> — MIT License</p>
+    <p>Ask4Me - <a href="https://github.com/easychen/ask4me" target="_blank" rel="noopener">github.com/easychen/ask4me</a> - MIT License</p>
   </div>
 </footer>
 
 <script>
-function copyCode(btn, id) {
-  const el = document.getElementById(id);
-  const text = el.textContent || el.innerText;
-  navigator.clipboard.writeText(text).then(() => {
-    btn.textContent = 'Copied!';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1800);
-  }).catch(() => {
-    btn.textContent = 'Failed';
-    setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
-  });
+const i18n = {
+  zh: {
+    copy: '复制',
+    copied: '已复制',
+    failed: '失败',
+    skip: '跳到正文',
+    nav: {
+      overview: '概览',
+      quickstart: '快速使用',
+      api: 'API',
+      mcd: 'MCD',
+      'json-forms': 'JSON Forms',
+      sdk: 'SDK/CLI'
+    }
+  },
+  en: {
+    copy: 'Copy',
+    copied: 'Copied',
+    failed: 'Failed',
+    skip: 'Skip to content',
+    nav: {
+      overview: 'Overview',
+      quickstart: 'Quick Use',
+      api: 'API',
+      mcd: 'MCD',
+      'json-forms': 'JSON Forms',
+      sdk: 'SDK/CLI'
+    }
+  }
+};
+
+function currentBaseUrl() {
+  if (window.location.origin && window.location.origin !== 'null') {
+    return window.location.origin.replace(/\/$/, '');
+  }
+  return 'https://your-ask4me-host';
 }
 
-// Smooth scroll offset for fixed nav
+function applyExampleUrls() {
+  const base = currentBaseUrl();
+  document.querySelectorAll('[data-base-url]').forEach(el => { el.textContent = base; });
+  document.querySelectorAll('[data-api-url]').forEach(el => { el.textContent = `${base}/v1/ask`; });
+  document.querySelectorAll('[data-api-stream-url]').forEach(el => { el.textContent = `${base}/v1/ask?stream=true`; });
+}
+
+function activeLang() {
+  return document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
+}
+
+function getStoredLang() {
+  try {
+    return localStorage.getItem('ask4me-help-lang');
+  } catch {
+    return null;
+  }
+}
+
+function storeLang(lang) {
+  try {
+    localStorage.setItem('ask4me-help-lang', lang);
+  } catch {
+    // Local storage can be unavailable in strict privacy contexts.
+  }
+}
+
+function setLanguage(lang) {
+  const selected = lang === 'en' ? 'en' : 'zh';
+  document.documentElement.lang = selected === 'zh' ? 'zh-CN' : 'en';
+
+  document.querySelectorAll('[data-lang-panel]').forEach(panel => {
+    panel.hidden = panel.getAttribute('data-lang-panel') !== selected;
+  });
+
+  document.querySelectorAll('[data-lang]').forEach(btn => {
+    btn.setAttribute('aria-pressed', String(btn.getAttribute('data-lang') === selected));
+  });
+
+  document.querySelectorAll('[data-target-link]').forEach(link => {
+    const target = link.getAttribute('data-target');
+    link.href = `#${selected}-${target}`;
+    if (!link.classList.contains('logo') && i18n[selected].nav[target]) {
+      link.textContent = i18n[selected].nav[target];
+    }
+  });
+
+  const skipLink = document.querySelector('[data-skip-link]');
+  if (skipLink) {
+    skipLink.href = `#${selected}-overview`;
+    skipLink.textContent = i18n[selected].skip;
+  }
+
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    if (!btn.classList.contains('copied')) {
+      btn.textContent = i18n[selected].copy;
+    }
+    btn.setAttribute('aria-label', i18n[selected].copy);
+  });
+
+  storeLang(selected);
+}
+
+async function copyCode(btn, id) {
+  const labels = i18n[activeLang()];
+  const el = document.getElementById(id);
+  if (!el) return;
+  const text = el.textContent || el.innerText || '';
+
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      textarea.remove();
+    }
+    btn.textContent = labels.copied;
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labels.copy;
+      btn.classList.remove('copied');
+    }, 1600);
+  } catch {
+    btn.textContent = labels.failed;
+    setTimeout(() => { btn.textContent = labels.copy; }, 1500);
+  }
+}
+
+document.querySelectorAll('[data-lang]').forEach(btn => {
+  btn.addEventListener('click', () => setLanguage(btn.getAttribute('data-lang')));
+});
+
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', e => {
     const target = document.querySelector(a.getAttribute('href'));
     if (target) {
       e.preventDefault();
       window.scrollTo({ top: target.offsetTop - 72, behavior: 'smooth' });
+      history.pushState(null, '', a.getAttribute('href'));
     }
   });
 });
-</script>
 
+applyExampleUrls();
+const hashLang = window.location.hash.startsWith('#zh-') ? 'zh' : window.location.hash.startsWith('#en-') ? 'en' : '';
+const savedLang = getStoredLang();
+const browserLang = navigator.language && navigator.language.toLowerCase().startsWith('zh') ? 'zh' : 'en';
+setLanguage(hashLang || savedLang || browserLang);
+</script>
 </body>
 </html>
