@@ -7,6 +7,7 @@ application:
       backend: http://ask4me:8080/
   public_path:
     - /
+    - /help
   handlers:
     error_page_templates:
       404: /lzcapp/pkg/content/errors/404.html.tpl
