@@ -1,10 +1,15 @@
 application:
   subdomain: ask4me
   upstreams:
+    - location: /help
+      backend: file:///lzcapp/pkg/content/web/index.html
     - location: /
       backend: http://ask4me:8080/
   public_path:
     - /
+  handlers:
+    error_page_templates:
+      404: /lzcapp/pkg/content/errors/404.html.tpl
 
 services:
   ask4me:
