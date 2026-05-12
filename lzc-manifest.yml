@@ -22,7 +22,8 @@ application:
 
 services:
   ask4me:
-    image: docker.1ms.run/easychen/ask4me:0.2.4
+    # easychen/ask4me:0.2.4
+    image: registry.lazycat.cloud/czyt/easychen/ask4me:090e4b934df935e8
     environment:
       - ASK4ME_BASE_URL={{if .U.base_url}}{{.U.base_url}}{{else}}https://{{.S.AppDomain}}{{end}}
       - ASK4ME_API_KEY={{.U.api_key}}
