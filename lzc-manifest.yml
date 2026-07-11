@@ -19,10 +19,10 @@ application:
   public_path:
     - /
     - /help
-
 services:
   ask4me:
     # easychen/ask4me:0.2.4
+    # upstream: easychen/ask4me:0.2.4
     image: registry.lazycat.cloud/czyt/easychen/ask4me:090e4b934df935e8
     environment:
       - ASK4ME_BASE_URL={{if .U.base_url}}{{.U.base_url}}{{else}}https://{{.S.AppDomain}}{{end}}
@@ -34,7 +34,6 @@ services:
       - ASK4ME_LISTEN_ADDR=:8080
     binds:
       - /lzcapp/var/data:/data
-
 usage: |
   Ask4Me forwards your questions to an AI backend and delivers answers via notification channels (ServerChan or Apprise).
 
