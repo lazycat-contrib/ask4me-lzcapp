@@ -1,0 +1,39 @@
+version: 1
+project:
+  root: .
+  build_config: lzc-build.yml
+  package_file: package.yml
+  output: dist/ask4me.lpk
+update:
+  strategy: publish
+  allow_downgrade: false
+  version_source:
+    type: image
+    image: ask4me
+build:
+  run_buildscript: false
+images:
+  - id: ask4me
+    target: service
+    service: ask4me
+    source: easychen/ask4me
+    channel: stable
+    tag_regex: '^v?[0-9]+\.[0-9]+\.[0-9]+$'
+    delivery:
+      mode: lazycat
+stores:
+  official:
+    enabled: true
+    skip_if_version_exists: true
+    create_if_missing: true
+    changelog_locales: [zh, en]
+    application:
+      language: zh
+      name: Ask4Me
+      source: https://github.com/easychen/ask4me
+      source_author: easychen
+  private:
+    enabled: true
+    skip_if_version_exists: true
+    name: Ask4Me
+    summary: 极简 Human-in-the-Loop 服务
